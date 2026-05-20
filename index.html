@@ -3,438 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextGen NCERT Quizzes</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
-
-        :root {
-            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text-light: #ffffff;
-            --text-dark: #1e293b;
-            --accent: #f59e0b;
-            --correct: #10b981;
-            --wrong: #ef4444;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background: var(--bg-gradient);
-            color: var(--text-light);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        /* Background Animated Circles */
-        .bg-circles {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-        .circle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 15s infinite linear;
-        }
-        .circle:nth-child(1) { width: 200px; height: 200px; top: -50px; left: -50px; }
-        .circle:nth-child(2) { width: 300px; height: 300px; bottom: -100px; right: -50px; animation-duration: 20s; }
-        .circle:nth-child(3) { width: 150px; height: 150px; bottom: 20%; left: 20%; animation-duration: 12s; }
-
-        @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-            100% { transform: translateY(0) rotate(360deg); }
-        }
-
-        /* Container & Glassmorphism */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 30px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            text-align: center;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        /* Utilities */
-        .hidden { display: none !important; }
-        .fade-in { animation: fadeIn 0.6s forwards; }
-        .slide-up { animation: slideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Typography & Buttons */
-        h1 { font-size: 2rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-        p { font-size: 1rem; margin-bottom: 30px; opacity: 0.9; }
-
-        button {
-            background: var(--text-light);
-            color: var(--text-dark);
-            border: none;
-            padding: 12px 20px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        button.primary {
-            background: var(--accent);
-            color: white;
-            margin-top: 20px;
-            width: 100%;
-        }
-
-        /* Selection Grids */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .grid-btn {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: 2px solid transparent;
-            padding: 10px;
-        }
-        
-        .grid-btn.selected { border-color: var(--accent); background: rgba(255,255,255,0.4); transform: scale(1.05); }
-
-        /* Quiz UI */
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        .progress-bar {
-            flex-grow: 1;
-            height: 8px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 4px;
-            margin: 0 15px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--accent);
-            width: 0%;
-            transition: width 0.4s ease;
-        }
-
-        .question-box {
-            background: rgba(255,255,255,0.9);
-            color: var(--text-dark);
-            padding: 20px;
-            border-radius: 16px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .options-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .option-btn {
-            background: rgba(255,255,255,0.9);
-            color: var(--text-dark);
-            text-align: left;
-            padding: 15px 20px;
-            border: 2px solid transparent;
-            font-weight: 600;
-        }
-
-        /* Interactive States */
-        @keyframes popCorrect { 0% { transform: scale(1); } 50% { transform: scale(1.05); background: var(--correct); color: white; } 100% { transform: scale(1); background: var(--correct); color: white; } }
-        @keyframes shakeWrong { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); background: var(--wrong); color: white;} 40%, 80% { transform: translateX(10px); background: var(--wrong); color: white;} }
-
-        .correct-answer { animation: popCorrect 0.5s forwards; border-color: var(--correct); pointer-events: none;}
-        .wrong-answer { animation: shakeWrong 0.5s forwards; border-color: var(--wrong); pointer-events: none;}
-        .disabled { opacity: 0.7; pointer-events: none; }
-
-        /* Results Screen */
-        .score-circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 8px solid var(--accent);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin: 0 auto 20px;
-            background: rgba(255,255,255,0.1);
-        }
-    </style>
+    <title>NCERT Interactive Quiz Platform - Classes 1-12</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Home Screen -->
+    <section id="home-screen" class="screen active">
+        <div class="hero-container">
+            <div class="hero-background" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f70570ec0?w=1200&q=80');"></div>
+            <div class="hero-overlay"></div>
+            
+            <div class="hero-content">
+                <h1 class="hero-title">NCERT Quiz Master</h1>
+                <p class="hero-subtitle">Master your subjects with interactive quizzes from Class 1 to Class 12</p>
+                <button class="cta-button" id="start-quiz-btn">Start Quiz Now</button>
+                <p class="hero-meta">Questions • Analytics • Instant Feedback</p>
+            </div>
+        </div>
+    </section>
 
-<div class="bg-circles">
-    <div class="circle"></div>
-    <div class="circle"></div>
-    <div class="circle"></div>
-</div>
+    <!-- Class Selection Screen -->
+    <section id="class-selection-screen" class="screen">
+        <div class="container">
+            <div class="screen-header">
+                <button class="back-btn" id="back-from-class">&larr; Back to Home</button>
+                <h2>Select Your Class</h2>
+                <p class="screen-subtitle">Choose a class to continue</p>
+            </div>
+            
+            <div class="classes-grid" id="classes-grid">
+                <!-- Dynamically generated by JavaScript -->
+            </div>
+        </div>
+    </section>
 
-<!-- SPLASH SCREEN -->
-<div class="glass-panel fade-in" id="splash-screen">
-    <h1>📚 NCERT Master</h1>
-    <p>Interactive learning from Class 1 to 12.</p>
-    <button class="slide-up" onclick="showScreen('home-screen')">Let's Learn</button>
-</div>
+    <!-- Subject Selection Screen -->
+    <section id="subject-selection-screen" class="screen">
+        <div class="container">
+            <div class="screen-header">
+                <button class="back-btn" id="back-from-subject">&larr; Back to Classes</button>
+                <h2 id="subject-header">Select Subject for <span id="selected-class-display">Class 10</span></h2>
+                <p class="screen-subtitle">Pick a subject to test your knowledge</p>
+            </div>
+            
+            <div class="subjects-grid" id="subjects-grid">
+                <!-- Dynamically generated by JavaScript -->
+            </div>
+        </div>
+    </section>
 
-<!-- HOME SCREEN -->
-<div class="glass-panel hidden" id="home-screen">
-    <h2>Select Your Class</h2>
-    <div class="grid" id="class-grid"></div>
+    <!-- Quiz Screen -->
+    <section id="quiz-screen" class="screen">
+        <div class="container">
+            <div class="quiz-header">
+                <div class="quiz-header-top">
+                    <span class="quiz-title" id="quiz-title">Physics - Class 12</span>
+                    <button class="quit-btn" id="quit-btn">&times;</button>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                    <span class="progress-text" id="progress-text">Question 1 of 5</span>
+                </div>
+            </div>
 
-    <div id="subject-container" class="hidden slide-up">
-        <h2>Select Subject</h2>
-        <div class="grid" id="subject-grid"></div>
-        <button class="primary hidden slide-up" id="start-btn" onclick="startQuiz()">Start Quiz Mode</button>
-    </div>
-</div>
+            <div class="quiz-content">
+                <div class="question-card">
+                    <div class="question-number" id="question-number">Question 1</div>
+                    <h3 class="question-text" id="question-text">What is the SI unit of energy?</h3>
+                    
+                    <div class="options-container" id="options-container">
+                        <!-- Dynamically generated by JavaScript -->
+                    </div>
 
-<!-- QUIZ SCREEN -->
-<div class="glass-panel hidden" id="quiz-screen">
-    <div class="progress-header">
-        <span id="current-q-num">1</span>
-        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
-        <span id="total-q-num">5</span>
-    </div>
-    
-    <div class="question-box slide-up" id="question-text">Loading question...</div>
-    
-    <div class="options-grid" id="options-container"></div>
-</div>
+                    <div class="quiz-footer">
+                        <button class="nav-btn prev-btn" id="prev-btn" disabled>← Previous</button>
+                        <span class="question-indicator" id="question-indicator"></span>
+                        <button class="nav-btn next-btn" id="next-btn">Next →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- RESULT SCREEN -->
-<div class="glass-panel hidden" id="result-screen">
-    <h1>Quiz Complete!</h1>
-    <div class="score-circle slide-up" id="final-score">0/0</div>
-    <p id="feedback-text">Great effort!</p>
-    <button class="primary" onclick="resetApp()">Back to Home</button>
-</div>
+    <!-- Results Screen -->
+    <section id="results-screen" class="screen">
+        <div class="container">
+            <div class="results-container">
+                <div class="results-animation">
+                    <div class="score-circle" id="score-circle">
+                        <div class="score-content">
+                            <span class="score-number" id="score-number">0</span>
+                            <span class="score-max">/100</span>
+                        </div>
+                    </div>
+                </div>
 
-<script>
-    let selectedClass = null;
-    let selectedSubject = null;
-    let currentQuestions = [];
-    let currentQIndex = 0;
-    let score = 0;
+                <h2 id="results-title" class="results-title">Excellent Performance!</h2>
+                <p class="results-message" id="results-message">You have successfully completed the quiz.</p>
 
-    // HARDCODED DATABASE: Works offline anywhere!
-    const quizDB = {
-        "class_1": {
-            "math": [
-                { q: "What comes after 9?", options: ["8", "10", "11", "7"], a: 1 },
-                { q: "How many fingers do you have on one hand?", options: ["4", "5", "6", "10"], a: 1 }
-            ],
-            "evs": [
-                { q: "Which animal says 'Meow'?", options: ["Dog", "Cow", "Cat", "Lion"], a: 2 },
-                { q: "What is the color of the sky?", options: ["Green", "Blue", "Red", "Yellow"], a: 1 }
-            ]
-        },
-        "class_11": {
-            "math": [
-                { q: "The distance between the points (a, b) and (-a, -b) is:", options: ["√(a²+b²)", "2√(a²+b²)", "a²+b²", "0"], a: 1 },
-                { q: "The center of the circle x² + y² - 4x - 6y + 9 = 0 is:", options: ["(2, 3)", "(-2, -3)", "(4, 6)", "(-4, -6)"], a: 0 }
-            ],
-            "physics": [
-                { q: "Which of the following is a scalar quantity?", options: ["Velocity", "Force", "Work", "Acceleration"], a: 2 },
-                { q: "Light year is a unit of:", options: ["Time", "Mass", "Distance", "Energy"], a: 2 }
-            ]
-        },
-        "class_12": {
-            "physics": [
-                { q: "Electric flux over a closed surface enclosing a charge q is:", options: ["q/ε₀", "qε₀", "Zero", "Infinity"], a: 0 },
-                { q: "The drift velocity of electrons is directly proportional to:", options: ["Electric field", "Length of wire", "Area of cross-section", "Temperature"], a: 0 }
-            ],
-            "math": [
-                { q: "If A is a symmetric matrix, then A transpose (A') is equal to:", options: ["-A", "A", "I", "0"], a: 1 },
-                { q: "The derivative of sin(x) is:", options: ["-cos(x)", "sin(x)", "cos(x)", "-sin(x)"], a: 2 }
-            ],
-            "chemistry": [
-                { q: "Which of the following is an amorphous solid?", options: ["Graphite", "Quartz glass", "Chrome alum", "Silicon carbide"], a: 1 }
-            ]
-        }
-    };
+                <div class="results-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Correct Answers</span>
+                        <span class="stat-value" id="correct-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Accuracy</span>
+                        <span class="stat-value" id="accuracy-percent">0%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Questions</span>
+                        <span class="stat-value" id="total-count">5</span>
+                    </div>
+                </div>
 
-    // Generic Fallback for subjects you haven't added yet
-    const genericDB = [
-        { q: "This subject's questions haven't been added yet!", options: ["Got it!", "I will add them later in the code", "Option C", "Option D"], a: 0 },
-        { q: "Try checking Class 1, 11, or 12 for the demo questions.", options: ["Okay", "Next", "Back", "Home"], a: 0 }
-    ];
+                <div class="results-actions">
+                    <button class="action-btn restart-btn" id="restart-btn">Try Another Subject</button>
+                    <button class="action-btn home-btn" id="home-btn">Back to Home</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    window.onload = function() {
-        const classGrid = document.getElementById('class-grid');
-        for(let i=1; i<=12; i++) {
-            let btn = document.createElement('button');
-            btn.className = 'grid-btn slide-up';
-            btn.style.animationDelay = (i * 0.05) + 's';
-            btn.innerText = 'Class ' + i;
-            btn.onclick = function() { selectClass(i, btn); };
-            classGrid.appendChild(btn);
-        }
-    };
-
-    function showScreen(screenId) {
-        document.querySelectorAll('.glass-panel').forEach(panel => panel.classList.add('hidden'));
-        const activeScreen = document.getElementById(screenId);
-        activeScreen.classList.remove('hidden');
-        activeScreen.classList.remove('fade-in');
-        void activeScreen.offsetWidth;
-        activeScreen.classList.add('fade-in');
-    }
-
-    function selectClass(classNum, btnElement) {
-        document.querySelectorAll('#class-grid .grid-btn').forEach(btn => btn.classList.remove('selected'));
-        btnElement.classList.add('selected');
-        selectedClass = 'class_' + classNum;
-
-        const subjectContainer = document.getElementById('subject-container');
-        const subjectGrid = document.getElementById('subject-grid');
-        subjectContainer.classList.remove('hidden');
-        subjectGrid.innerHTML = '';
-        document.getElementById('start-btn').classList.add('hidden');
-
-        let subjects = [];
-        if (classNum <= 5) subjects = [{id: 'math', name: 'Mathematics'}, {id: 'evs', name: 'EVS'}, {id: 'english', name: 'English'}];
-        else if (classNum <= 10) subjects = [{id: 'math', name: 'Mathematics'}, {id: 'science', name: 'Science'}, {id: 'sst', name: 'Social Studies'}];
-        else subjects = [{id: 'physics', name: 'Physics'}, {id: 'chemistry', name: 'Chemistry'}, {id: 'math', name: 'Mathematics'}, {id: 'biology', name: 'Biology'}];
-
-        subjects.forEach((sub, index) => {
-            let btn = document.createElement('button');
-            btn.className = 'grid-btn slide-up';
-            btn.style.animationDelay = (index * 0.1) + 's';
-            btn.innerText = sub.name;
-            btn.onclick = function() { selectSubject(sub.id, btn); };
-            subjectGrid.appendChild(btn);
-        });
-    }
-
-    function selectSubject(subjId, btnElement) {
-        document.querySelectorAll('#subject-grid .grid-btn').forEach(btn => btn.classList.remove('selected'));
-        btnElement.classList.add('selected');
-        selectedSubject = subjId;
-        document.getElementById('start-btn').classList.remove('hidden');
-    }
-
-    function startQuiz() {
-        if(quizDB[selectedClass] && quizDB[selectedClass][selectedSubject]) {
-            currentQuestions = quizDB[selectedClass][selectedSubject];
-        } else {
-            currentQuestions = genericDB;
-        }
-        
-        currentQIndex = 0;
-        score = 0;
-        document.getElementById('total-q-num').innerText = currentQuestions.length;
-        showScreen('quiz-screen');
-        loadQuestion();
-    }
-
-    function loadQuestion() {
-        const qData = currentQuestions[currentQIndex];
-        document.getElementById('current-q-num').innerText = currentQIndex + 1;
-        
-        const progressPercent = (currentQIndex / currentQuestions.length) * 100;
-        document.getElementById('progress').style.width = progressPercent + '%';
-
-        const qBox = document.getElementById('question-text');
-        qBox.innerText = qData.q;
-        qBox.classList.remove('slide-up');
-        void qBox.offsetWidth;
-        qBox.classList.add('slide-up');
-
-        const optContainer = document.getElementById('options-container');
-        optContainer.innerHTML = '';
-        
-        qData.options.forEach((opt, index) => {
-            let btn = document.createElement('button');
-            btn.className = 'option-btn slide-up';
-            btn.style.animationDelay = (index * 0.1) + 's';
-            btn.innerText = opt;
-            btn.onclick = function() { handleAnswer(index, btn); };
-            optContainer.appendChild(btn);
-        });
-    }
-
-    function handleAnswer(selectedIndex, btnElement) {
-        const allBtns = document.querySelectorAll('.option-btn');
-        allBtns.forEach(btn => btn.classList.add('disabled'));
-
-        const correctIndex = currentQuestions[currentQIndex].a;
-
-        if(selectedIndex === correctIndex) {
-            btnElement.classList.remove('disabled');
-            btnElement.classList.add('correct-answer');
-            score++;
-        } else {
-            btnElement.classList.remove('disabled');
-            btnElement.classList.add('wrong-answer');
-            allBtns[correctIndex].classList.remove('disabled');
-            allBtns[correctIndex].classList.add('correct-answer');
-        }
-
-        setTimeout(() => {
-            currentQIndex++;
-            if(currentQIndex < currentQuestions.length) {
-                loadQuestion();
-            } else {
-                finishQuiz();
-            }
-        }, 1500);
-    }
-
-    function finishQuiz() {
-        showScreen('result-screen');
-        document.getElementById('final-score').innerText = score + '/' + currentQuestions.length;
-        
-        const feedback = document.getElementById('feedback-text');
-        const percentage = score / currentQuestions.length;
-        
-        if(percentage === 1) feedback.innerText = "Perfect Score! Masterful work.";
-        else if(percentage >= 0.5) feedback.innerText = "Good job! Keep practicing.";
-        else feedback.innerText = "Review your basics and try again!";
-    }
-
-    function resetApp() {
-        showScreen('home-screen');
-        document.getElementById('subject-container').classList.add('hidden');
-        document.querySelectorAll('#class-grid .grid-btn').forEach(btn => btn.classList.remove('selected'));
-        selectedClass = null;
-        selectedSubject = null;
-    }
-</script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
