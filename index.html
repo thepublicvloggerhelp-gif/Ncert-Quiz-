@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NCERT Interactive Quiz Platform - Classes 1-12</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="animations.css">
 </head>
 <body>
     <!-- Home Screen -->
@@ -14,10 +15,10 @@
             <div class="hero-overlay"></div>
             
             <div class="hero-content">
-                <h1 class="hero-title">NCERT Quiz Master</h1>
-                <p class="hero-subtitle">Master your subjects with interactive quizzes from Class 1 to Class 12</p>
-                <button class="cta-button" id="start-quiz-btn">Start Quiz Now</button>
-                <p class="hero-meta">Questions • Analytics • Instant Feedback</p>
+                <h1 class="hero-title animate-fade-in-down">NCERT Quiz Master</h1>
+                <p class="hero-subtitle animate-fade-in-up">Master your subjects with interactive quizzes from Class 1 to Class 12</p>
+                <button class="cta-button animate-bounce" id="start-quiz-btn">Start Quiz Now</button>
+                <p class="hero-meta animate-fade-in">Questions • Analytics • Instant Feedback</p>
             </div>
         </div>
     </section>
@@ -27,8 +28,8 @@
         <div class="container">
             <div class="screen-header">
                 <button class="back-btn" id="back-from-class">&larr; Back to Home</button>
-                <h2>Select Your Class</h2>
-                <p class="screen-subtitle">Choose a class to continue</p>
+                <h2 class="animate-fade-in-down">Select Your Class</h2>
+                <p class="screen-subtitle animate-fade-in">Choose a class to continue</p>
             </div>
             
             <div class="classes-grid" id="classes-grid">
@@ -42,8 +43,8 @@
         <div class="container">
             <div class="screen-header">
                 <button class="back-btn" id="back-from-subject">&larr; Back to Classes</button>
-                <h2 id="subject-header">Select Subject for <span id="selected-class-display">Class 10</span></h2>
-                <p class="screen-subtitle">Pick a subject to test your knowledge</p>
+                <h2 id="subject-header" class="animate-fade-in-down">Select Subject for <span id="selected-class-display">Class 10</span></h2>
+                <p class="screen-subtitle animate-fade-in">Pick a subject to test your knowledge</p>
             </div>
             
             <div class="subjects-grid" id="subjects-grid">
@@ -69,7 +70,7 @@
             </div>
 
             <div class="quiz-content">
-                <div class="question-card">
+                <div class="question-card animate-fade-in-up">
                     <div class="question-number" id="question-number">Question 1</div>
                     <h3 class="question-text" id="question-text">What is the SI unit of energy?</h3>
                     
@@ -92,7 +93,7 @@
         <div class="container">
             <div class="results-container">
                 <div class="results-animation">
-                    <div class="score-circle" id="score-circle">
+                    <div class="score-circle animate-zoom-in-up" id="score-circle">
                         <div class="score-content">
                             <span class="score-number" id="score-number">0</span>
                             <span class="score-max">/100</span>
@@ -100,27 +101,27 @@
                     </div>
                 </div>
 
-                <h2 id="results-title" class="results-title">Excellent Performance!</h2>
-                <p class="results-message" id="results-message">You have successfully completed the quiz.</p>
+                <h2 id="results-title" class="results-title animate-fade-in-down">Excellent Performance!</h2>
+                <p class="results-message animate-fade-in" id="results-message">You have successfully completed the quiz.</p>
 
                 <div class="results-stats">
-                    <div class="stat-item">
+                    <div class="stat-item stagger-item animate-fade-in-up">
                         <span class="stat-label">Correct Answers</span>
                         <span class="stat-value" id="correct-count">0</span>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat-item stagger-item animate-fade-in-up">
                         <span class="stat-label">Accuracy</span>
                         <span class="stat-value" id="accuracy-percent">0%</span>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat-item stagger-item animate-fade-in-up">
                         <span class="stat-label">Total Questions</span>
                         <span class="stat-value" id="total-count">5</span>
                     </div>
                 </div>
 
                 <div class="results-actions">
-                    <button class="action-btn restart-btn" id="restart-btn">Try Another Subject</button>
-                    <button class="action-btn home-btn" id="home-btn">Back to Home</button>
+                    <button class="action-btn restart-btn hover-scale" id="restart-btn">Try Another Subject</button>
+                    <button class="action-btn home-btn hover-scale" id="home-btn">Back to Home</button>
                 </div>
             </div>
         </div>
